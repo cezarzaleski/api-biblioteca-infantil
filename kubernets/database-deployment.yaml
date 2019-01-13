@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: database
+  name: database-arquetipo
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: database
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: arquetipo_lumen
+        - name: MYSQL_PASSWORD
+          value: "123456"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "123456"
+        - name: MYSQL_USER
+          value: arquetipo_lumen_user
+        image: mysql
+        name: arquetipo-database
+        resources: {}
+      restartPolicy: Always
+status: {}

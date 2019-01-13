@@ -1,0 +1,25 @@
+FROM php:7.1-fpm
+
+MAINTAINER Cezar Zaleski
+
+RUN apt-get update && \
+	apt-get install -y zlib1g-dev libpng-dev unzip && docker-php-ext-install gd zip pdo pdo_mysql
+
+COPY . /var/www/arquetipo
+
+WORKDIR /var/www/arquetipo
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php -r "if (hash_file('SHA384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');" && \
+    export COMPOSER_ALLOW_SUPERUSER=1 && \
+    composer install
+
+RUN chown -R www-data:www-data /var/www/arquetipo
+
+RUN ["chmod", "+x", "migrate.sh"]
+RUN ["chmod", "+x", "wait-for-it.sh"]
+RUN ["chmod", "+x", "/var/www/arquetipo/migrate.sh"]
+RUN ["chmod", "+x", "/var/www/arquetipo/wait-for-it.sh"]
+#ENTRYPOINT ["sh", "/var/www/arquetipo/migrate.sh"]

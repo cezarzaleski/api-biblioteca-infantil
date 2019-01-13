@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: app-arquetipo
+  name: app-arquetipo
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: app-arquetipo
+    spec:
+      containers:
+      - env:
+        image: cezarzaleski/app-arquetipo-lumen:develop
+        name: app-arquetipo-lumen
+        ports:
+        - containerPort: 9000
+        resources: {}
+        workingDir: /var/www/arquetipo
+      restartPolicy: Always
+status: {}
